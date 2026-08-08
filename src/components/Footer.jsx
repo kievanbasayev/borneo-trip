@@ -1,36 +1,38 @@
 function Footer() {
   return (
-    <footer className="bg-surface-container-highest dark:bg-inverse-surface w-full mt-auto border-t border-outline-variant dark:border-outline">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-gutter max-w-container-max mx-auto py-12 px-margin-mobile md:px-margin-desktop">
-        <div className="col-span-1 md:col-span-1 mb-8 md:mb-0">
-          <div className="font-headline-sm text-headline-sm font-bold text-on-surface dark:text-inverse-on-surface mb-4">
-            BorneoExpress
+    <footer className="footer">
+      <div className="max-w-container-max mx-auto px-margin-desktop">
+        <div className="footer-grid">
+          <div className="footer-brand">
+            <h3>Borneo<span className="logo-accent">Journey</span></h3>
+            <p>Layanan shuttle premium menghubungkan Kalimantan Selatan dan Kalimantan Tengah dengan kenyamanan ekstra.</p>
+            <div style={{ display: 'flex', gap: '12px' }}>
+              <a href="#" className="social-icon" aria-label="Facebook">f</a>
+              <a href="#" className="social-icon" aria-label="Instagram">IG</a>
+              <a href="#" className="social-icon" aria-label="Twitter">X</a>
+              <a href="#" className="social-icon" aria-label="WhatsApp">WA</a>
+            </div>
           </div>
-          <p className="font-body-sm text-body-sm text-on-surface-variant dark:text-surface-variant mb-4">
-            © 2024 BorneoExpress. Inter-city reliability across Kalimantan.
-          </p>
+          <div className="footer-links-col">
+            <h4>Perusahaan</h4>
+            <ul>
+              <li><a href="#">Tentang Kami</a></li>
+              <li><a href="#">Syarat & Ketentuan</a></li>
+              <li><a href="#">Kebijakan Privasi</a></li>
+            </ul>
+          </div>
+          <div className="footer-links-col">
+            <h4>Layanan</h4>
+            <ul>
+              <li><a href="#">Rute & Harga</a></li>
+              <li><a href="#">Pusat Bantuan</a></li>
+              <li><a href="#">Hubungi Kami</a></li>
+            </ul>
+          </div>
         </div>
-        <div className="col-span-1 flex flex-col space-y-3">
-          <a className="font-body-sm text-body-sm text-on-surface-variant dark:text-surface-variant hover:underline decoration-primary transition-all cursor-pointer" href="#">
-            About Us
-          </a>
-          <a className="font-body-sm text-body-sm text-on-surface-variant dark:text-surface-variant hover:underline decoration-primary transition-all cursor-pointer" href="#">
-            Terms of Service
-          </a>
-          <a className="font-body-sm text-body-sm text-on-surface-variant dark:text-surface-variant hover:underline decoration-primary transition-all cursor-pointer" href="#">
-            Privacy Policy
-          </a>
-        </div>
-        <div className="col-span-1 flex flex-col space-y-3">
-          <a className="font-body-sm text-body-sm text-on-surface-variant dark:text-surface-variant hover:underline decoration-primary transition-all cursor-pointer" href="#">
-            Routes &amp; Pricing
-          </a>
-          <a className="font-body-sm text-body-sm text-on-surface-variant dark:text-surface-variant hover:underline decoration-primary transition-all cursor-pointer" href="#">
-            Help Center
-          </a>
-          <a className="font-body-sm text-body-sm text-on-surface-variant dark:text-surface-variant hover:underline decoration-primary transition-all cursor-pointer" href="#">
-            Contact Support
-          </a>
+        <div className="footer-bottom">
+          <span>&copy; 2026 BorneoJourney. All rights reserved.</span>
+          <span>Solusi Travel Kalimantan Selatan & Tengah</span>
         </div>
       </div>
     </footer>

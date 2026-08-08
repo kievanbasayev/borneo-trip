@@ -1,79 +1,52 @@
-const routes = [
-  {
-    from: "Banjarmasin",
-    to: "Palangkaraya",
-    price: "Rp 150k",
-    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBRUaFpdbYLfCPOi0ziD8taw9XbcgL-nvnERnYO2EHL0GX6PBtUUQjm4gGIWfIY_7uuniXP6QNsw8hVYHEwbCt4zIQdWQ2I7t6dEgdGkxsb385-LflV58J0KsyQbG9aMEY5urLGIbNH3wCqcTJj0giwFyhL3BDk5yuKq9UrQUjrrbBZ36U9VWTRN4mDX6jHhTrsrsDBMMjTx-G3xzYEiHP_vUJkm80vnVWouraxswABfTC-5r_fJ01L",
-    alt: "Palangkaraya",
-  },
-  {
-    from: "Banjarbaru",
-    to: "Sampit",
-    price: "Rp 200k",
-    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuDNykVrnclgS_WBSPe37B4K3nM2FwWVV-Q24tUpTaGCcvY7b9Y9vfFCBarLBFryOyuZXw5chbJffZCv7Epna4b8_bRbGcV2q_j-4IT_xzqTzXL5_nXIkQqVUY_nL0cF-QyvTapDoYe7rDae1Aaqrbqdkpa5M4ZyxyQOzutwXgdyqBvefSC36VWDuyQre3I-j7wnTleziaLYSFbrhjX-ckit84Ftm6HXz1OBP_QWMlJR4_VUIk5cFNu2",
-    alt: "Sampit",
-  },
-  {
-    from: "Palangkaraya",
-    to: "Banjarmasin",
-    price: "Rp 150k",
-    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBRUaFpdbYLfCPOi0ziD8taw9XbcgL-nvnERnYO2EHL0GX6PBtUUQjm4gGIWfIY_7uuniXP6QNsw8hVYHEwbCt4zIQdWQ2I7t6dEgdGkxsb385-LflV58J0KsyQbG9aMEY5urLGIbNH3wCqcTJj0giwFyhL3BDk5yuKq9UrQUjrrbBZ36U9VWTRN4mDX6jHhTrsrsDBMMjTx-G3xzYEiHP_vUJkm80vnVWouraxswABfTC-5r_fJ01L",
-    alt: "Palangkaraya",
-  },
-  {
-    from: "Sampit",
-    to: "Banjarbaru",
-    price: "Rp 200k",
-    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuDNykVrnclgS_WBSPe37B4K3nM2FwWVV-Q24tUpTaGCcvY7b9Y9vfFCBarLBFryOyuZXw5chbJffZCv7Epna4b8_bRbGcV2q_j-4IT_xzqTzXL5_nXIkQqVUY_nL0cF-QyvTapDoYe7rDae1Aaqrbqdkpa5M4ZyxyQOzutwXgdyqBvefSC36VWDuyQre3I-j7wnTleziaLYSFbrhjX-ckit84Ftm6HXz1OBP_QWMlJR4_VUIk5cFNu2",
-    alt: "Sampit",
-  },
-];
+function PopularRoutes({ onRouteClick }) {
+  const routes = [
+    { from: 'Banjarmasin', to: 'Palangkaraya', price: 'Rp 150k', image: '/images/banjarmasin.jpg', alt: 'Banjarmasin ke Palangkaraya' },
+    { from: 'Banjarbaru', to: 'Sampit', price: 'Rp 200k', image: '/images/banjarbaru-sampit.jpg', alt: 'Banjarbaru ke Sampit' },
+    { from: 'Palangkaraya', to: 'Banjarmasin', price: 'Rp 150k', image: '/images/palangkaraya.jpg', alt: 'Palangkaraya ke Banjarmasin' },
+  ];
 
-function PopularRoutes() {
   return (
-    <section className="py-20 px-margin-mobile md:px-margin-desktop bg-surface-container-low">
-      <div className="max-w-container-max mx-auto">
-        <div className="flex justify-between items-end mb-10">
-          <div>
-            <h2 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface mb-2">
-              Rute Populer
-            </h2>
-            <p className="font-body-md text-body-md text-on-surface-variant">
-              Destinasi favorit pelanggan setia kami.
-            </p>
+    <section className="section" style={{ paddingTop: 0 }}>
+      <div className="max-w-container-max mx-auto px-margin-desktop">
+        <div className="routes-header">
+          <div className="left">
+            <h2 className="headline-lg">Rute Populer</h2>
+            <p className="body-md">Destinasi favorit pelanggan setia kami.</p>
           </div>
-          <button className="hidden md:flex items-center text-primary font-label-bold text-label-bold hover:underline">
-            Lihat Semua Rute <span className="material-symbols-outlined ml-1 text-sm">arrow_forward</span>
+          <button className="hidden md:flex items-center" style={{ color: 'var(--color-primary)', fontWeight: 600, gap: '6px', background: 'none', border: 'none', cursor: 'pointer' }}
+            onClick={() => onRouteClick({ origin: 'Banjarmasin', destination: 'Palangkaraya' })}>
+            Lihat Semua Rute <span style={{ fontSize: '16px' }}>&rarr;</span>
           </button>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="routes-grid">
           {routes.map((route, index) => (
-            <div key={index} className="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm group cursor-pointer border border-transparent hover:border-primary transition-all">
-              <div className="h-40 w-full relative">
+            <div
+              key={index}
+              className="route-card"
+              onClick={() => onRouteClick({ origin: route.from, destination: route.to })}
+            >
+              <div className="route-image-wrapper">
                 <img
                   alt={route.alt}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  className="w-full h-full object-cover"
                   src={route.image}
                 />
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-                  <span className="bg-secondary text-on-secondary px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider">
-                    Tersedia
-                  </span>
-                </div>
+                {index === 0 && <div className="route-badge label-bold">TERSEDIA</div>}
+                {index === 2 && <div className="route-badge label-bold">TERSEDIA</div>}
               </div>
-              <div className="p-5">
-                <div className="flex justify-between items-center mb-3">
-                  <h4 className="font-label-bold text-label-bold text-on-surface-variant">{route.from}</h4>
-                  <span className="material-symbols-outlined text-outline text-sm mx-2">sync_alt</span>
-                  <h4 className="font-label-bold text-label-bold text-on-surface-variant">{route.to}</h4>
+              <div className="route-info">
+                <div className="route-cities">
+                  <span>{route.from}</span>
+                  <span className="route-arrow">&rarr;</span>
+                  <span>{route.to}</span>
                 </div>
-                <div className="flex justify-between items-end mt-4">
-                  <div>
-                    <p className="text-xs text-on-surface-variant mb-1">Mulai dari</p>
-                    <p className="font-headline-md text-headline-md text-primary">{route.price}</p>
-                  </div>
-                  <div className="w-8 h-8 rounded-full bg-primary-fixed flex items-center justify-center">
-                    <span className="material-symbols-outlined text-primary text-sm">arrow_forward_ios</span>
+                <p className="route-price-label body-sm">Mulai dari</p>
+                <div className="route-price-row">
+                  <span className="route-price">{route.price}</span>
+                  <div className="route-go-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="9 18 15 12 9 6" />
+                    </svg>
                   </div>
                 </div>
               </div>

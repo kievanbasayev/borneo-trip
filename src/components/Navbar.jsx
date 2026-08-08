@@ -1,7 +1,7 @@
 import { useAuth } from '../hooks';
 
-function Navbar({ onNavigate, currentView }) {
-  const { currentUser, logout, isAdmin } = useAuth();
+function Navbar({ onNavigate, currentView, currentUser, onLogout }) {
+  const { isAdmin } = useAuth();
 
   const navItems = [
     { label: 'Schedules', view: 'home' },
@@ -10,6 +10,12 @@ function Navbar({ onNavigate, currentView }) {
     { label: 'Reviews', view: 'reviews' },
     { label: 'Support', view: 'support' },
   ];
+
+  const greeting = currentUser?.role === 'customer'
+    ? `Halo, ${currentUser?.profile?.name || 'Penumpang'}`
+    : currentUser?.role === 'admin'
+      ? 'Administrator'
+      : '';
 
   return (
     <>
@@ -41,7 +47,7 @@ function Navbar({ onNavigate, currentView }) {
               {isAdmin && (
                 <li>
                   <button
-                    className="nav-link active"
+                    className={`nav-link ${currentView === 'admin' ? 'active' : ''}`}
                     onClick={() => onNavigate('admin')}
                   >
                     Admin Panel
@@ -54,7 +60,11 @@ function Navbar({ onNavigate, currentView }) {
           <div className="user-profile">
             {currentUser ? (
               <>
-                <button className="btn btn-outline" onClick={() => { logout(); onNavigate('home'); }}>
+                <div style={{ textAlign: 'right' }}>
+                  <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--color-primary)' }}>{greeting}</div>
+                  <div style={{ fontSize: '11px', color: 'var(--color-on-surface-variant)' }}>{currentUser.email}</div>
+                </div>
+                <button className="btn btn-outline" onClick={onLogout}>
                   Sign Out
                 </button>
                 <div className="avatar" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'var(--color-primary-fixed)', color: 'var(--color-primary)', fontWeight: 700, fontSize: '14px' }}>

@@ -188,9 +188,9 @@ function BookingsView() {
                   </div>
                   <div className="ticket-divider"></div>
                   <div className="ticket-qr-section">
-                    <div className="ticket-qr-code">
-                      <img src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${showTicket.code}`} className="ticket-qr-code-img" alt="QR E-ticket" />
-                    </div>
+                       <div className="ticket-qr-code">
+                         <img src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(`BorneoJourney E-Tiket\nKode: ${showTicket.code}\nRute: ${showTicket.schedule.origin} → ${showTicket.schedule.destination}\nTanggal: ${dateFormatted(showTicket.date)}\nJam: ${showTicket.schedule.depTime} WITA\nKelas: ${showTicket.schedule.class}\nPenumpang: ${showTicket.passenger.name}`)}`} className="ticket-qr-code-img" alt="QR E-ticket" />
+                       </div>
                     <div className="ticket-qr-text">
                       <strong style={{ color: 'var(--color-primary)', display: 'block', marginBottom: '4px' }}>Pindai Saat Boarding</strong>
                       <span className="body-sm" style={{ fontSize: '11px' }}>

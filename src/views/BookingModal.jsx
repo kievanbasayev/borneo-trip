@@ -17,9 +17,9 @@ function BookingModal({ schedule, searchParams, onClose, onSuccess }) {
   const { finalPrice, activeEvent } = getAdjustedPrice(basePrice, date);
   const totalPrice = finalPrice * passengers;
 
-  const goTo = (s) => {
-    if (s === 'success') {
-      setBookingCode(generateBookingCode());
+  const goTo = (s, code) => {
+    if (s === 'success' && code) {
+      setBookingCode(code);
     }
     setStep(s);
   };
@@ -34,8 +34,9 @@ function BookingModal({ schedule, searchParams, onClose, onSuccess }) {
     } else if (step === 2) {
       setProcessing(true);
       setTimeout(() => {
+        const code = generateBookingCode();
         const newBooking = {
-          code: bookingCode || generateBookingCode(),
+          code,
           schedule: { ...schedule, price: finalPrice },
           passenger,
           passengersCount: passengers,
@@ -45,7 +46,7 @@ function BookingModal({ schedule, searchParams, onClose, onSuccess }) {
         };
         addBooking(newBooking);
         setProcessing(false);
-        goTo('success');
+        goTo('success', code);
         onSuccess?.();
       }, 2000);
     }
@@ -266,7 +267,7 @@ function BookingModal({ schedule, searchParams, onClose, onSuccess }) {
                     <div className="ticket-qr-section">
                       <div className="ticket-qr-code">
                         <img
-                          src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${bookingCode}`}
+                          src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(`BorneoJourney E-Tiket\nKode: ${bookingCode}\nRute: ${schedule.origin} → ${schedule.destination}\nTanggal: ${dateFormatted}\nJam: ${schedule.depTime} WITA\nKelas: ${schedule.class}\nPenumpang: ${passenger.name}`)}`}
                           className="ticket-qr-code-img"
                           alt="QR E-ticket"
                         />

@@ -47,7 +47,7 @@ function Hero({ onSearch }) {
               Asal
             </label>
             <select className="form-control" name="origin" required defaultValue="">
-              <option value="" disabled selected>Pilih Kota Asal</option>
+              <option value="" disabled>Pilih Kota Asal</option>
               <option value="Banjarmasin">Banjarmasin (Kalsel)</option>
               <option value="Banjarbaru">Banjarbaru (Kalsel)</option>
               <option value="Palangkaraya">Palangkaraya (Kalteng)</option>
@@ -63,7 +63,7 @@ function Hero({ onSearch }) {
               Tujuan
             </label>
             <select className="form-control" name="destination" required defaultValue="">
-              <option value="" disabled selected>Pilih Kota Tujuan</option>
+              <option value="" disabled>Pilih Kota Tujuan</option>
               <option value="Banjarmasin">Banjarmasin (Kalsel)</option>
               <option value="Banjarbaru">Banjarbaru (Kalsel)</option>
               <option value="Palangkaraya">Palangkaraya (Kalteng)</option>

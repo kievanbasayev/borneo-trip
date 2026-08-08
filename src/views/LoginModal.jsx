@@ -1,19 +1,16 @@
 import { useState } from 'react';
-import { useAuth } from '../hooks';
 
-function LoginModal({ onClose, onLoginSuccess }) {
+function LoginModal({ onClose, onLoginSuccess, login }) {
   const [role, setRole] = useState('customer');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { login } = useAuth();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (role === 'admin') {
       if (email === 'admin@mail.com' && password === 'admin123') {
         login({ email, role: 'admin' });
-        onLoginSuccess?.();
-        onClose();
+        onLoginSuccess?.('admin');
       } else {
         alert('Email atau kata sandi Admin salah.');
       }
@@ -29,8 +26,7 @@ function LoginModal({ onClose, onLoginSuccess }) {
             nik: '6371020304050001',
           },
         });
-        onLoginSuccess?.();
-        onClose();
+        onLoginSuccess?.('customer');
       } else {
         alert('Nomor WhatsApp / Email atau kata sandi Pelanggan salah.');
       }

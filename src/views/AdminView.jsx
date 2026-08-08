@@ -1,13 +1,31 @@
 import { useState } from 'react';
-import { useSchedules, useCities, useRoutePrices, usePricingEvents, useReviews, getTomorrowDate } from '../hooks';
+import { useSchedules, useCities, useRoutePrices, usePricingEvents, useBookings, useReviews, getTomorrowDate } from '../hooks';
 
 function AdminView() {
   const [activeTab, setActiveTab] = useState('admin-schedules-tab');
   const { schedules, updateSchedule, deleteSchedule, addSchedule } = useSchedules();
   const { cities, addCity, deleteCity } = useCities();
   const { routePrices, updatePrice, getPrice } = useRoutePrices();
-  const { events, addEvent, deleteEvent, getAdjustedPrice } = usePricingEvents();
+  const { events, getAdjustedPrice } = usePricingEvents();
+  const { bookings } = useBookings();
   const { reviews, deleteReview } = useReviews();
+
+  const [passengerFilterRoute, setPassengerFilterRoute] = useState('');
+  const [passengerFilterDate, setPassengerFilterDate] = useState('');
+
+  const filteredBookings = bookings.filter(b => {
+    const routeMatch = !passengerFilterRoute || b.schedule.origin === passengerFilterRoute || b.schedule.destination === passengerFilterRoute;
+    const dateMatch = !passengerFilterDate || b.date === passengerFilterDate;
+    return routeMatch && dateMatch;
+  });
+
+  const tabs = [
+    { id: 'admin-schedules-tab', label: 'Kelola Jadwal Keberangkatan' },
+    { id: 'admin-routes-tab', label: 'Kelola Rute & Kota' },
+    { id: 'admin-pricing-tab', label: 'Atur Harga & Simulasi' },
+    { id: 'admin-events-tab', label: 'Daftar Penumpang' },
+    { id: 'admin-reviews-tab', label: 'Kelola Ulasan Pelanggan' },
+  ];
 
   // Schedule form state
   const [editingId, setEditingId] = useState(null);
@@ -95,28 +113,6 @@ function AdminView() {
     });
     alert(`Harga dasar rute ${sim.origin} -> ${sim.destination} (${sim.class}) berhasil diperbarui menjadi Rp ${newPrice.toLocaleString('id-ID')}.`);
   };
-
-  // Event form state
-  const [eventForm, setEventForm] = useState({ name: '', start: getTomorrowDate(), end: getTomorrowDate(), type: 'markup-percent', value: 20 });
-
-  const handleEventSubmit = (e) => {
-    e.preventDefault();
-    if (new Date(eventForm.start) > new Date(eventForm.end)) {
-      alert('Tanggal mulai tidak boleh setelah tanggal selesai.');
-      return;
-    }
-    addEvent({ id: `E-${Math.floor(10 + Math.random() * 90)}`, ...eventForm, value: Number(eventForm.value) });
-    setEventForm({ name: '', start: getTomorrowDate(), end: getTomorrowDate(), type: 'markup-percent', value: 20 });
-    alert(`Aturan harga event ${eventForm.name} berhasil disimpan!`);
-  };
-
-  const tabs = [
-    { id: 'admin-schedules-tab', label: 'Kelola Jadwal Keberangkatan' },
-    { id: 'admin-routes-tab', label: 'Kelola Rute & Kota' },
-    { id: 'admin-pricing-tab', label: 'Atur Harga & Simulasi' },
-    { id: 'admin-events-tab', label: 'Pengaturan Harga Event' },
-    { id: 'admin-reviews-tab', label: 'Kelola Ulasan Pelanggan' },
-  ];
 
   return (
     <section className="admin-view-container active">
@@ -382,71 +378,66 @@ function AdminView() {
         {/* Events Tab */}
         {activeTab === 'admin-events-tab' && (
           <div className="admin-tab-content active">
-            <div className="admin-grid">
-              <div style={{
-                backgroundColor: 'var(--color-surface-container-lowest)',
-                border: '1px solid var(--color-outline-variant)',
-                borderRadius: 'var(--radius-lg)', padding: '24px',
-                boxShadow: 'var(--shadow-level1)'
-              }}>
-                <h3 className="headline-md" style={{ fontSize: '18px', marginBottom: '20px', color: 'var(--color-primary)' }}>Tambah Event Harga</h3>
-                <form onSubmit={handleEventSubmit}>
-                  <div className="form-group" style={{ marginBottom: '12px' }}>
-                    <label className="label-md">Nama Event</label>
-                    <input type="text" className="form-control" value={eventForm.name} onChange={(e) => setEventForm({ ...eventForm, name: e.target.value })} placeholder="Contoh: Libur Lebaran" required />
-                  </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '12px' }}>
-                    <div className="form-group">
-                      <label className="label-md">Tanggal Mulai</label>
-                      <input type="date" className="form-control" value={eventForm.start} onChange={(e) => setEventForm({ ...eventForm, start: e.target.value })} required />
-                    </div>
-                    <div className="form-group">
-                      <label className="label-md">Tanggal Selesai</label>
-                      <input type="date" className="form-control" value={eventForm.end} onChange={(e) => setEventForm({ ...eventForm, end: e.target.value })} required />
-                    </div>
-                  </div>
-                  <div className="form-group" style={{ marginBottom: '12px' }}>
-                    <label className="label-md">Tipe Penyesuaian</label>
-                    <select className="form-control" value={eventForm.type} onChange={(e) => setEventForm({ ...eventForm, type: e.target.value })}>
-                      <option value="markup-percent">Markup Persentase</option>
-                      <option value="markup-nominal">Markup Nominal</option>
-                      <option value="discount-percent">Diskon Persentase</option>
-                    </select>
-                  </div>
-                  <div className="form-group" style={{ marginBottom: '16px' }}>
-                    <label className="label-md">Nilai</label>
-                    <input type="number" className="form-control" value={eventForm.value} onChange={(e) => setEventForm({ ...eventForm, value: e.target.value })} required />
-                  </div>
-                  <button type="submit" className="btn btn-primary" style={{ width: '100%' }}>Simpan Event</button>
-                </form>
+            <div style={{
+              backgroundColor: 'var(--color-surface-container-lowest)',
+              border: '1px solid var(--color-outline-variant)',
+              borderRadius: 'var(--radius-lg)', padding: '24px',
+              boxShadow: 'var(--shadow-level1)'
+            }}>
+              <h3 className="headline-md" style={{ fontSize: '18px', marginBottom: '20px', color: 'var(--color-primary)' }}>Daftar Penumpang</h3>
+              <div style={{ display: 'flex', gap: '16px', marginBottom: '24px', flexWrap: 'wrap' }}>
+                <div className="form-group" style={{ minWidth: '200px' }}>
+                  <label className="label-md">Filter Rute</label>
+                  <select className="form-control" value={passengerFilterRoute} onChange={(e) => setPassengerFilterRoute(e.target.value)}>
+                    <option value="">Semua Rute</option>
+                    {cities.map(c => (
+                      <option key={c} value={c}>{c}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="form-group" style={{ minWidth: '200px' }}>
+                  <label className="label-md">Filter Tanggal</label>
+                  <input type="date" className="form-control" value={passengerFilterDate} onChange={(e) => setPassengerFilterDate(e.target.value)} />
+                </div>
+                {(passengerFilterRoute || passengerFilterDate) && (
+                  <button className="btn btn-outline" onClick={() => { setPassengerFilterRoute(''); setPassengerFilterDate(''); }} style={{ alignSelf: 'flex-end' }}>
+                    Reset Filter
+                  </button>
+                )}
               </div>
               <div className="admin-table-wrapper">
                 <table className="admin-table">
                   <thead>
-                    <tr><th>Nama Event</th><th>Periode</th><th>Tipe</th><th>Aksi</th></tr>
+                    <tr>
+                      <th style={{ width: '60px', textAlign: 'center' }}>No</th>
+                      <th>Nama Penumpang</th>
+                      <th>Rute</th>
+                      <th style={{ textAlign: 'center' }}>Jumlah</th>
+                      <th>Nominal</th>
+                      <th>Tanggal</th>
+                      <th>Status</th>
+                    </tr>
                   </thead>
                   <tbody>
-                    {events.map(ev => (
-                      <tr key={ev.id}>
-                        <td><strong>{ev.name}</strong></td>
-                        <td><span style={{ fontSize: '12px', color: 'var(--color-on-surface-variant)' }}>
-                          {new Date(ev.start).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })} -
-                          {new Date(ev.end).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}
-                        </span></td>
-                        <td>
-                          <span className="admin-action-badge" style={{
-                            backgroundColor: ev.type === 'discount-percent' ? 'var(--color-secondary-container)' : 'var(--color-primary-fixed)',
-                            color: ev.type === 'discount-percent' ? 'var(--color-on-secondary-container)' : 'var(--color-primary)',
-                            fontWeight: 700
-                          }}>
-                            {ev.type === 'markup-percent' ? `Markup +${ev.value}%` : ev.type === 'markup-nominal' ? `Markup +Rp ${ev.value.toLocaleString('id-ID')}` : `Diskon -${ev.value}%`}
-                          </span>
-                        </td>
-                        <td style={{ textAlign: 'center' }}>
-                          <button className="btn btn-secondary btn-small" style={{ backgroundColor: 'var(--color-error)', color: 'var(--color-on-error)' }} onClick={() => { if (confirm('Yakin hapus event ini?')) deleteEvent(ev.id); }}>Hapus</button>
+                    {filteredBookings.length === 0 ? (
+                      <tr>
+                        <td colSpan="7" style={{ textAlign: 'center', padding: '32px', color: 'var(--color-on-surface-variant)' }}>
+                          Belum ada data penumpang.
                         </td>
                       </tr>
-                    ))}
+                    ) : (
+                      filteredBookings.map((b, i) => (
+                        <tr key={i}>
+                          <td style={{ textAlign: 'center' }}>{i + 1}</td>
+                          <td><strong>{b.passenger.name}</strong></td>
+                          <td>{b.schedule.origin} &rarr; {b.schedule.destination}</td>
+                          <td style={{ textAlign: 'center' }}>{b.passengersCount} Orang</td>
+                          <td>Rp {(b.schedule.price * b.passengersCount).toLocaleString('id-ID')}</td>
+                          <td>{b.date}</td>
+                          <td><span className={`status-pill ${b.status === 'Aktif' ? 'on-time' : 'delayed'}`} style={{ fontSize: '10px', padding: '2px 8px' }}>{b.status}</span></td>
+                        </tr>
+                      ))
+                    )}
                   </tbody>
                 </table>
               </div>

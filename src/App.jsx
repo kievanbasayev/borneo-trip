@@ -12,12 +12,14 @@ import SupportView from './views/SupportView';
 import AdminView from './views/AdminView';
 import LoginModal from './views/LoginModal';
 import BookingModal from './views/BookingModal';
+import { useAuth } from './hooks';
 
 function App() {
   const [currentView, setCurrentView] = useState('home');
   const [searchParams, setSearchParams] = useState(null);
   const [selectedSchedule, setSelectedSchedule] = useState(null);
   const [showBookingModal, setShowBookingModal] = useState(false);
+  const { currentUser, login, logout } = useAuth();
 
   useEffect(() => {
     const handler = (e) => {
@@ -55,13 +57,20 @@ function App() {
   };
 
   const handleBookingSuccess = () => {
-    setShowBookingModal(false);
-    setSelectedSchedule(null);
+    // Don't close modal automatically - let user see the e-ticket
   };
 
   const handleCloseBooking = () => {
     setShowBookingModal(false);
     setSelectedSchedule(null);
+  };
+
+  const handleLoginSuccess = (role) => {
+    if (role === 'admin') {
+      setCurrentView('admin');
+    } else {
+      setCurrentView('home');
+    }
   };
 
   const renderView = () => {
@@ -90,7 +99,12 @@ function App() {
   return (
     <div className="bg-surface text-on-surface font-body-md min-h-screen flex flex-col">
       {showNavContent && (
-        <Navbar onNavigate={handleNavigate} currentView={currentView} />
+        <Navbar
+          onNavigate={handleNavigate}
+          currentView={currentView}
+          currentUser={currentUser}
+          onLogout={() => { logout(); handleNavigate('home'); }}
+        />
       )}
       <main className="flex-grow">
         {renderView()}
@@ -102,7 +116,8 @@ function App() {
       {currentView === 'login-overlay' && (
         <LoginModal
           onClose={() => setCurrentView('home')}
-          onLoginSuccess={() => setCurrentView('home')}
+          onLoginSuccess={handleLoginSuccess}
+          login={login}
         />
       )}
 
